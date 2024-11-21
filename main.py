@@ -4,23 +4,43 @@ import random
 class Game:
     def __init__(self, length_number: int = 4):
         self.length_number = length_number
-        self.__hidden_number = []
+        self.__hidden_number = self.create_hidden_number()
 
-    # загадываем число
     def create_hidden_number(self) -> list:
         all_numbers = list(range(0, 10))
         random.shuffle(all_numbers)
-        self.__hidden_number = all_numbers[:self.length_number]
-        return self.__hidden_number
+        hidden_number = all_numbers[:self.length_number]
+        return hidden_number
 
-    def count_bulls(self, user_number: list):
+    def start_round(self, user_guess: list):
+        user_guess = [int(elem) for elem in user_guess]
+        cows = self.count_cows(user_guess)
+        bulls = self.count_bulls(user_guess)
+        if bulls < self.length_number:
+            message = f'{user_guess}, Коровы: {cows}, Быки: {bulls}'
+            # print(f'Коровы: {self.count_cows(user_guess)}')
+            # print(f'Быки: {self.count_bulls(user_guess)}')
+            # print('------------------------------')
+            # user_guess = list(input('Введите число: '))
+            # user_guess = [int(elem) for elem in user_guess]
+            # self.start_round(user_guess)
+        else:
+            message = f'{user_guess}, YOU WIN!'
+        return message
+    def get_tutorial(self):
+        pass
+
+    def exit_game(self):
+        pass
+
+    def count_bulls(self, user_number: list) -> int:
         counter_bulls = 0
         for i in range(self.length_number):
             if self.__hidden_number[i] == user_number[i]:
                 counter_bulls += 1
         return counter_bulls
 
-    def count_cows(self, user_number: list):
+    def count_cows(self, user_number: list) -> int:
         counter_cows = 0
         for i in range(self.length_number):
             if (user_number[i] in self.__hidden_number) and (user_number[i] != self.__hidden_number[i]):
@@ -28,11 +48,9 @@ class Game:
         return counter_cows
 
 
-game = Game(4)
-try_user_number = list(input())
-try_user_number = [int(elem) for elem in try_user_number]
-print(try_user_number)
-print(game.create_hidden_number())
-print(game.count_cows(try_user_number))
-print(game.count_bulls(try_user_number))
-
+if __name__ == '__main__':
+    game = Game(4)
+    game.create_hidden_number()
+    user_guess = list(input('Введите число:'))
+    user_guess = [int(elem) for elem in user_guess]
+    game.start_round(user_guess)
