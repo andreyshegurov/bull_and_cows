@@ -6,6 +6,8 @@ class Game:
         self.length_number = length_number
         self.__hidden_number = self.create_hidden_number()
 
+    list_hint = []
+
     def create_hidden_number(self) -> list:
         all_numbers = list(range(0, 10))
         random.shuffle(all_numbers)
@@ -27,11 +29,15 @@ class Game:
         else:
             message = f'{user_guess}, YOU WIN!'
         return message
+
     def get_tutorial(self):
         pass
 
-    def exit_game(self):
-        pass
+    def get_hint(self):
+        list_not_hint = [item for item in self.__hidden_number if item not in self.list_hint]
+        hint = random.choice(list_not_hint)
+        self.list_hint.append(hint)
+        return hint
 
     def count_bulls(self, user_number: list) -> int:
         counter_bulls = 0
@@ -46,11 +52,3 @@ class Game:
             if (user_number[i] in self.__hidden_number) and (user_number[i] != self.__hidden_number[i]):
                 counter_cows += 1
         return counter_cows
-
-
-if __name__ == '__main__':
-    game = Game(4)
-    game.create_hidden_number()
-    user_guess = list(input('Введите число:'))
-    user_guess = [int(elem) for elem in user_guess]
-    game.start_round(user_guess)
