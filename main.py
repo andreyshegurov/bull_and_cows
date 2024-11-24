@@ -10,6 +10,9 @@ class Game:
 
     list_hint = []
 
+    def reset_list_hint(self):
+        self.list_hint = []
+
     def create_hidden_number(self) -> list:
         all_numbers = list(range(0, 10))
         random.shuffle(all_numbers)
@@ -25,20 +28,20 @@ class Game:
         user_guess = [int(elem) for elem in user_guess]
         cows = self.count_cows(user_guess)
         bulls = self.count_bulls(user_guess)
-        user_guess = ''.join(str(user_guess))
-        if bulls < self.length_number:
-            message = f'{user_guess}, Коровы: {cows}, Быки: {bulls}'
-        else:
-            message = f'{user_guess}, YOU WIN!'
-        return message
-
-    def get_tutorial(self):
-        pass
+        # if bulls < self.length_number:
+        #     message = f'Коровы: {cows}, Быки: {bulls}'
+        # else:
+        #     message = f'YOU WIN!'
+        return cows, bulls
 
     def get_light_hint(self):
+        self.list_hint = []
+        print(self.list_hint)
         list_not_hint = [item for item in self.__hidden_number if item not in self.list_hint]
         hint = random.choice(list_not_hint)
         self.list_hint.append(hint)
+        print(self.list_hint)
+        print(list_not_hint)
         return hint
 
     def get_hard_hint(self):
@@ -46,6 +49,7 @@ class Game:
         hint = random.choice(list_not_hint)
         index_hint = self.__hidden_number.index(hint)
         self.list_hint.append(hint)
+        print(hint, list_not_hint, self.list_hint)
         return index_hint, hint
 
     def count_bulls(self, user_guess: list) -> int:
@@ -63,11 +67,10 @@ class Game:
         return counter_cows
 
     def check_user_guess(self, user_guess: str) -> bool:
-        if user_guess.isdigit():
-            if len(user_guess) == self.length_number:
-                check = True
-            else:
-                check = False
+        if user_guess.isdigit() and (len(user_guess) == self.length_number) and (
+                len(user_guess) == len(set(user_guess))):
+            check = True
         else:
             check = False
         return check
+
