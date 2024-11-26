@@ -1,6 +1,6 @@
 import sys
 
-from PyQt6.QtGui import QIcon
+from PyQt6.QtGui import QIcon, QFont
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, \
     QHBoxLayout, QVBoxLayout, QWidget, QListWidget, \
     QLineEdit, QMessageBox, QLabel, QSpinBox, QGridLayout
@@ -16,28 +16,33 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.window_settings = window_settings
         self.setWindowTitle("Быки и Коровы!")
-        self.setFixedSize(420, 460)
+        self.setFixedSize(440, 480)
         self.setWindowIcon(QIcon('icon.png'))
 
         # Создание виджетов основного окна игры.
         self.list_try = QListWidget()
-        self.list_try.setFixedWidth(400)
+        self.list_try.setFixedWidth(420)
+        self.list_try.setFont(QFont('Times', 10))
 
         self.text_guess = QLineEdit()
         self.text_guess.setPlaceholderText('Введите число...')
-        self.text_guess.setFixedSize(400, 40)
+        self.text_guess.setFixedSize(420, 40)
+        self.text_guess.setFont(QFont('Times', 10))
 
         self.button_guess = QPushButton('Проверить число')
         self.button_guess.setFixedSize(200, 30)
         self.button_guess.clicked.connect(self.press_button_check)
+        self.button_guess.setFont(QFont('Times', 10))
 
-        self.button_hint = QPushButton('Подсказка')
-        self.button_hint.setFixedSize(95, 30)
+        self.button_hint = QPushButton(f'Подсказка ({self.window_settings.max_num_hint})')
+        self.button_hint.setFixedSize(105, 30)
         self.button_hint.clicked.connect(self.press_button_hint)
+        self.button_hint.setFont(QFont('Times', 10))
 
         self.button_again = QPushButton('Начать заново')
-        self.button_again.setFixedSize(95, 30)
+        self.button_again.setFixedSize(105, 30)
         self.button_again.clicked.connect(self.restart_game)
+        self.button_again.setFont(QFont('Times', 10))
 
         # Создание макета основного окна игры.
         base_layout = QVBoxLayout()
@@ -123,6 +128,7 @@ class MainWindow(QMainWindow):
         """Выполняется при нажатии кнопки 'Подсказка'."""
         if self.number_user_hint < self.game.max_number_hint:
             self.number_user_hint += 1
+            self.button_hint.setText(f'Подсказка ({self.window_settings.max_num_hint - self.number_user_hint})')
             if self.number_user_hint < 2:
                 # Подсказка пользователю одной "коровы".
                 hint = self.game.get_hint()
@@ -134,9 +140,8 @@ class MainWindow(QMainWindow):
                 message_hint = f'В загаданном числе цифра {hint[1]} ' \
                                f'расположена на {hint[0] + 1}-м месте'
                 self.list_try.addItem(message_hint)
-        else:
-            self.list_try.addItem('Подсказок больше нет :(')
-            self.button_hint.setEnabled(False)
+            if self.number_user_hint == self.game.max_number_hint:
+                self.button_hint.setEnabled(False)
 
     def show_error(self):
         """Выполняется при некорректном вводе числа."""
@@ -172,7 +177,7 @@ class SettingsWindow(QMainWindow):
         """Устанавливает атрибуты и виджеты окна настроек."""
         super().__init__()
         self.setWindowTitle("Быки и Коровы!")
-        self.setFixedSize(420, 210)
+        self.setFixedSize(440, 220)
         self.setWindowIcon(QIcon('icon.png'))
 
         self.length_number = 4
@@ -182,12 +187,17 @@ class SettingsWindow(QMainWindow):
         # Создание виджетов окна настроек игры.
         self.label_hello = QLabel('Добро пожаловать в игру '
                                   '"Быки и коровы"! \n'
-                                  'Ознакомьтесь с правилами, определите '
-                                  'параметры игры и начинайте!')
+                                  'Ознакомьтесь с правилами и определите '
+                                  'параметры игры:')
+        self.label_hello.setFont(QFont('Times', 10))
         self.label_length_number = QLabel('Длина загадываемого числа')
+        self.label_length_number.setFont(QFont('Times', 10))
         self.label_max_number_guess = QLabel('Максимальное количество попыток')
+        self.label_max_number_guess.setFont(QFont('Times', 10))
         self.label_hint = QLabel('Играть с подсказками')
+        self.label_hint.setFont(QFont('Times', 10))
         self.label_max_number_hint = QLabel('Количество подсказок')
+        self.label_max_number_hint.setFont(QFont('Times', 10))
 
         self.spinbox_length_number = QSpinBox()
         self.spinbox_length_number.setFixedWidth(100)
@@ -214,12 +224,14 @@ class SettingsWindow(QMainWindow):
         self.spinbox_max_number_hint.setValue(1)
 
         self.button_start = QPushButton('Начать')
-        self.button_start.setFixedSize(290, 40)
+        self.button_start.setFixedSize(315, 40)
         self.button_start.clicked.connect(self.get_started)
+        self.button_start.setFont(QFont('Times', 10))
 
         self.button_tutorial = QPushButton('Как играть?')
         self.button_tutorial.setFixedSize(100, 40)
         self.button_tutorial.clicked.connect(self.get_tutorial)
+        self.button_tutorial.setFont(QFont('Times', 10))
 
         # Создание макета окна настроек игры.
         base_layout = QVBoxLayout()
@@ -240,6 +252,7 @@ class SettingsWindow(QMainWindow):
         max_number_hint_layout.addWidget(self.spinbox_max_number_hint)
 
         button_start_layout = QHBoxLayout()
+        button_start_layout.setContentsMargins(0, 15, 0, 0)
         button_start_layout.addWidget(self.button_start)
         button_start_layout.addWidget(self.button_tutorial)
 
@@ -277,7 +290,7 @@ class TutorialWindow(QMainWindow):
         super().__init__()
         self.window_settings = window_settings
         self.setWindowTitle("Быки и Коровы!")
-        self.setFixedSize(420, 360)
+        self.setFixedSize(440, 370)
         self.setWindowIcon(QIcon('icon.png'))
 
         # Создание виджетов окна с правилами игры.
@@ -306,10 +319,12 @@ class TutorialWindow(QMainWindow):
 
         self.text_label = QLabel(text_tutorial)
         self.text_label.setWordWrap(True)
+        self.text_label.setFont(QFont('Times', 10))
 
         self.button_back = QPushButton('Назад')
         self.button_back.clicked.connect(self.get_back)
         self.button_back.setFixedSize(100, 40)
+        self.button_back.setFont(QFont('Times', 10))
 
         # Создание макета окна с правилами игры.
         base_layout = QVBoxLayout()

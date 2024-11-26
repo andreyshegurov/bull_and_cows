@@ -1,4 +1,4 @@
-from PyQt6.QtGui import QIcon
+from PyQt6.QtGui import QIcon, QFont
 from PyQt6.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QLabel
 
 
@@ -16,6 +16,7 @@ class WinDialog(QDialog):
         )
 
         self.buttonBox = QDialogButtonBox(button_win)
+        self.buttonBox.setFont(QFont('Times', 10))
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
 
@@ -42,6 +43,7 @@ class RestartDialog(QDialog):
         )
 
         self.buttonBox = QDialogButtonBox(button_restart)
+        self.buttonBox.setFont(QFont('Times', 10))
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
 
