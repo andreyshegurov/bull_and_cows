@@ -45,7 +45,7 @@ class Game:
         hidden_number_showed = ''.join(str(el) for el in hidden_number_showed)
         return hidden_number_showed
 
-    def start_round(self, user_guess: str) -> (int, int):
+    def start_round(self, user_guess: list) -> (int, int):
         """Подсчет количества "коров" и "быков".
 
         Args:

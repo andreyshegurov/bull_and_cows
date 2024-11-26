@@ -31,14 +31,14 @@ def test_get_hidden_number(new_game, expected_result):
 
 @pytest.mark.parametrize(
     'input_arg, expected_result',
-    [('1234', (0, 4)),
-     ('1034', (0, 3)),
-     ('1243', (2, 2)),
-     ('0123', (3, 0)),
-     ('4321', (4, 0)),
-     ('6789', (0, 0)),
-     ('6784', (0, 1)),
-     ('4659', (1, 0))]
+    [([1, 2, 3, 4], (0, 4)),
+     ([1, 0, 3, 4], (0, 3)),
+     ([1, 2, 4, 3], (2, 2)),
+     ([0, 1, 2, 3], (3, 0)),
+     ([4, 3, 2, 1], (4, 0)),
+     ([6, 7, 8, 9], (0, 0)),
+     ([6, 7, 8, 4], (0, 1)),
+     ([4, 6, 5, 9], (1, 0))]
 )
 def test_start_round(new_game, input_arg, expected_result):
     assert new_game.start_round(input_arg) == expected_result
